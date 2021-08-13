@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 
 # check how to turn on debug mode
-@app.route("/")
+@app.route("/oz")
 def home_page():
     json = {'name': 'Oz'}
     coll = db_connection.getDbConnection('test', 'test')
@@ -15,7 +15,7 @@ def home_page():
     # return render_template("index.html",
     #     online_users=online_users)
 
-@app.route("/oz")
+@app.route("/")
 def email_request():
     return 'fuck you !!!'
 
