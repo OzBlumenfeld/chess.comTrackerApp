@@ -19,9 +19,6 @@ def home_page():
 def email_request():
     return 'fuck you !!!'
 
-# def main():
-#     print('hi there!')
-
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
