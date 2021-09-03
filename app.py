@@ -7,11 +7,11 @@ app = Flask(__name__)
 
 
 # check how to turn on debug mode
-@app.route("/oz")
-def home_page():
-    json = {'name': 'Oz'}
-    coll = db_connection.getDbConnection('test', 'test')
-    return db_connection.findDocument(coll, json)['name']
+# @app.route("/oz")
+# def home_page():
+#     json = {'name': 'Oz'}
+#     coll = db_connection.getDbConnection('test', 'test')
+#     return db_connection.findDocument(coll, json)['name']
 
     # online_users = mongo.db.users.find({"online": True})
     # return render_template("index.html",
@@ -28,8 +28,9 @@ def get_player_stats():
 
 @app.route("/")
 def email_request():
-    serving = 'serving...'
-    return render_template('app.html', content=serving)
+    return 'Welcome to my website'
+    # serving = 'serving...'
+    # return render_template('app.html', content=serving)
 
 
 if __name__ == '__main__':
