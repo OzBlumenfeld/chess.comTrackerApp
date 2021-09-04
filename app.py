@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, Response, make_response
+from flask import Flask, request, make_response
+
 import db_connection
 
-from chess_utils import get_last_blitz_stats
+from chess_utils import get_last_blitz_stats, get_user_monthly_games, get_user_details
 
 app = Flask(__name__)
 
@@ -18,18 +19,31 @@ app = Flask(__name__)
 #     online_users=online_users)
 
 
-# @app.route('/chess')
+@app.route('/chess/games')
+def get_games():
+    args = request.args
+    month = args.get('month')
+    user = args.get('user')
+    year = args.get('year')
 
-@app.route("/stats")
+    games_data = get_user_monthly_games(user, month, year)
+    body = {'gamesPlayed': len(games_data)}
+    return body
+
+
+@app.route("/chess/stats")
 def get_player_stats():
     user = request.args.get('user')
-    # resp_body = get_last_blitz_stats(user)
-    resp_headers = {'Access-Control-Allow-Origin': '*'}
+    user_details = get_user_details(user)
 
+    response_body = get_last_blitz_stats(user)
+    response_body['avatar'] = user_details['avatar']
+    response_body['location'] = user_details['location']
+    response_body['status'] = user_details['status']
 
+    print(f'debug oz: {response_body}')
 
-    # response = Response(response=resp_body, status=200, headers=resp_headers)
-    response = make_response(get_last_blitz_stats(user))
+    response = make_response(response_body)
     response.headers.set('Access-Control-Allow-Origin', '*')
     return response
 

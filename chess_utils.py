@@ -15,8 +15,14 @@ def get_last_blitz_stats(username):
     return (response.json()['chess_blitz']['last'])
 
 def get_user_monthly_games(username, month, year):
-    response = requests.get(f'https://api.chess.com/pub/player/{username}/games/{year}/{month}')
+    url = f'https://api.chess.com/pub/player/{username}/games/{year}/{month}'
+    response = requests.get(url)
     return response.json()['games']
+
+def get_user_details(username):
+    url = f'https://api.chess.com/pub/player/{username}'
+    response = requests.get(url)
+    return response.json()
 
 
 # Print my chess.com statistics
