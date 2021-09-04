@@ -37,8 +37,16 @@ def get_player_stats():
     user_details = get_user_details(user)
 
     response_body = get_last_blitz_stats(user)
-    response_body['avatar'] = user_details['avatar']
-    response_body['location'] = user_details['location']
+
+    try:
+        response_body['avatar'] = user_details['avatar']
+    except KeyError:
+        print('No avatar available for this player')
+        response_body['avatar'] = None
+
+    country = user_details['country']
+
+    response_body['country'] = country[len(country) -2 : len(country)]
     response_body['status'] = user_details['status']
 
     print(f'debug oz: {response_body}')
