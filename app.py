@@ -2,7 +2,7 @@ from flask import Flask, request, make_response
 
 import db_connection
 
-from chess_utils import get_last_blitz_stats, get_user_monthly_games, get_user_details
+from chess_utils import get_last_blitz_stats, get_user_monthly_games, get_user_details, get_blitz_chess_stats_record
 
 app = Flask(__name__)
 
@@ -48,8 +48,22 @@ def get_player_stats():
 
     response_body['country'] = country[len(country) -2 : len(country)]
     response_body['status'] = user_details['status']
+    games_num =  get_user_monthly_games(user, '09', '2021')
+    response_body['games'] = len(games_num)
 
-    print(f'debug oz: {response_body}')
+    record = get_blitz_chess_stats_record(user)
+    won_games = record['win']
+    lost_games = record['loss']
+    draw_games = record['draw']
+    total_games = won_games + lost_games + draw_games
+
+    response_body['win_percentage'] = (won_games / total_games) * 100
+    response_body['loss_percentage'] = (lost_games / total_games) * 100
+    response_body['draw_percentage'] = (draw_games / total_games) * 100
+
+
+
+    # print(f'debug oz: {response_body}')
 
     response = make_response(response_body)
     response.headers.set('Access-Control-Allow-Origin', '*')
