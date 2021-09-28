@@ -46,9 +46,9 @@ def get_player_stats():
 
     country = user_details['country']
 
-    response_body['country'] = country[len(country) -2 : len(country)]
+    response_body['country'] = country[len(country) - 2: len(country)]
     response_body['status'] = user_details['status']
-    games_num =  get_user_monthly_games(user, '09', '2021')
+    games_num = get_user_monthly_games(user, '09', '2021')
     response_body['games'] = len(games_num)
 
     record = get_blitz_chess_stats_record(user)
@@ -61,7 +61,47 @@ def get_player_stats():
     response_body['loss_percentage'] = (lost_games / total_games) * 100
     response_body['draw_percentage'] = (draw_games / total_games) * 100
 
+    # print(f'debug oz: {response_body}')
 
+    response = make_response(response_body)
+    response.headers.set('Access-Control-Allow-Origin', '*')
+    return response
+
+
+@app.route("/chess/stats/month")
+def get_player_stats_month():
+    user = request.args.get('user')
+    # month should be like 09 for September
+    month = request.args.get('month')
+    year = request.args.get('year')
+
+    user_details = get_user_details(user)
+
+    response_body = get_last_blitz_stats(user)
+
+    try:
+        response_body['avatar'] = user_details['avatar']
+    except KeyError:
+        print('No avatar available for this player')
+        response_body['avatar'] = None
+
+    country = user_details['country']
+
+    response_body['country'] = country[len(country) - 2: len(country)]
+    response_body['status'] = user_details['status']
+
+    games_num = get_user_monthly_games(user, month, year)
+    response_body['games'] = len(games_num)
+
+    record = get_blitz_chess_stats_record(user)
+    won_games = record['win']
+    lost_games = record['loss']
+    draw_games = record['draw']
+    total_games = won_games + lost_games + draw_games
+
+    response_body['win_percentage'] = (won_games / total_games) * 100
+    response_body['loss_percentage'] = (lost_games / total_games) * 100
+    response_body['draw_percentage'] = (draw_games / total_games) * 100
 
     # print(f'debug oz: {response_body}')
 
